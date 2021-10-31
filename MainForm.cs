@@ -15,6 +15,7 @@ namespace Test_Program2
 
 
         List<string> filesList;
+        public int loadFileNum;
         MenuStrip menuStrip;
         OpenFileDialog ofd;
 
@@ -55,14 +56,19 @@ namespace Test_Program2
                 filesList = files.ToList();
                 Console.WriteLine($"{filesList.Count}");
 
+                loadFileNum = filesList.IndexOf(ofd.FileName);
+
                 Button[] iButton = new Button[filesList.Count];
                 for (int i = 0; i < iButton.Length; i++)
                 {
                     iButton[i] = new Button();
-                    iButton[i].Location = new Point(ClientSize.Width / 2 - iButton[i].Size.Width / 2 + 100 * i, ClientSize.Height / 2);
+                    iButton[i].Location = new Point(ClientSize.Width / 2 - iButton[i].Size.Width / 2 + 100 * (i - loadFileNum), ClientSize.Height / 2);
                     iButton[i].Text = i.ToString();
                     Controls.Add(iButton[i]);
                 }
+
+                //ZOrderでコントロールのZ位置を調整する(参考：https://docs.microsoft.com/ja-jp/office/vba/language/reference/user-interface-help/zorder-method)
+                iButton[loadFileNum].BringToFront();
             }
         }
 
