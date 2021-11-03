@@ -18,12 +18,16 @@ namespace Test_Program2
         public int loadFileNum;
         MenuStrip menuStrip;
         OpenFileDialog ofd;
+        Button[] iButton;
 
         public MainForm()
         {
             Load += new EventHandler(MainForm_Load);
             menuStrip = new MenuStrip();
             Controls.Add(menuStrip);
+
+            MouseWheel += new MouseEventHandler(MouseWheelControl);
+            DoubleBuffered = true;
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -58,7 +62,7 @@ namespace Test_Program2
 
                 loadFileNum = filesList.IndexOf(ofd.FileName);
 
-                Button[] iButton = new Button[filesList.Count];
+                iButton = new Button[filesList.Count];
                 for (int i = 0; i < iButton.Length; i++)
                 {
                     iButton[i] = new Button();
@@ -69,7 +73,52 @@ namespace Test_Program2
 
                 //ZOrderでコントロールのZ位置を調整する(参考：https://docs.microsoft.com/ja-jp/office/vba/language/reference/user-interface-help/zorder-method)
                 iButton[loadFileNum].BringToFront();
+                Console.WriteLine($"{loadFileNum}");
             }
+        }
+
+        void MouseWheelControl (object sender, MouseEventArgs e)
+        {
+            //ファイルを読み込んでいるかどうかを判別の処理を追加すること
+
+            /*
+            if (e.Delta > 0)
+            {
+                loadFileNum += 1;
+                if(loadFileNum > filesList.Count)
+                {
+                    loadFileNum = filesList.Count;
+                }
+                Console.WriteLine($"{loadFileNum}");
+            }
+            else if (e.Delta < 0)
+            {
+                loadFileNum -= 1;
+                if(loadFileNum < 0)
+                {
+                    loadFileNum = 0;
+                }
+                Console.WriteLine($"{loadFileNum}");
+
+            }
+            */
+
+            if (e.Delta > 0 && loadFileNum < filesList.Count - 1)
+            {
+                loadFileNum += 1;
+                Console.WriteLine($"{loadFileNum}");
+            }
+            else if (e.Delta < 0 && loadFileNum > 0)
+            {
+                loadFileNum -= 1;
+                Console.WriteLine($"{loadFileNum}");
+            }
+            for (int i = 0; i < iButton.Length; i++)
+            {
+                iButton[i].Location = new Point(ClientSize.Width / 2 - iButton[i].Size.Width / 2 + 100 * (i - loadFileNum), ClientSize.Height / 2);
+                Invalidate();
+            }
+
         }
 
         private void Close_Click(object sender, EventArgs e)
