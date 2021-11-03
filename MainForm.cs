@@ -19,6 +19,7 @@ namespace Test_Program2
         MenuStrip menuStrip;
         OpenFileDialog ofd;
         Button[] iButton;
+        PictureBox[] pbLists;
 
         public MainForm()
         {
@@ -67,6 +68,7 @@ namespace Test_Program2
                 {
                     iButton[i] = new Button();
                     iButton[i].Location = new Point(ClientSize.Width / 2 - iButton[i].Size.Width / 2 + 100 * (i - loadFileNum), ClientSize.Height / 2);
+                    iButton[i].Image = Image.FromFile(filesList[i]);
                     iButton[i].Text = i.ToString();
                     Controls.Add(iButton[i]);
                 }
@@ -103,14 +105,14 @@ namespace Test_Program2
             }
             */
 
-            if (e.Delta > 0 && loadFileNum < filesList.Count - 1)
-            {
-                loadFileNum += 1;
-                Console.WriteLine($"{loadFileNum}");
-            }
-            else if (e.Delta < 0 && loadFileNum > 0)
+            if (e.Delta > 0 && loadFileNum > 0)
             {
                 loadFileNum -= 1;
+                Console.WriteLine($"{loadFileNum}");
+            }
+            else if (e.Delta < 0 && loadFileNum < filesList.Count - 1)
+            {
+                loadFileNum += 1;
                 Console.WriteLine($"{loadFileNum}");
             }
             for (int i = 0; i < iButton.Length; i++)
